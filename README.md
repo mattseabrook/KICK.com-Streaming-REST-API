@@ -1,10 +1,7 @@
-# KICKstand
-
 Cross-platform utility for KICK
 
 **Table-of-Contents**
 
-- [KICKstand](#kickstand)
 - [Developer Notes](#developer-notes)
 - [API](#api)
   - [User](#user)
