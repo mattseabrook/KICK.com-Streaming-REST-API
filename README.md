@@ -11,6 +11,9 @@ Cross-platform utility for KICK
     - [Channels Followed](#channels-followed)
     - [Current Viewers](#current-viewers)
     - [Top Categories](#top-categories)
+    - [stream/livestreams/en](#streamlivestreamsen)
+    - [Chat Messages](#chat-messages)
+      - [Send](#send)
 
 # Developer Notes
 
@@ -264,5 +267,90 @@ Fetches platform data for the top categories.
         "slug": "irl",
         "icon": "\ud83c\udf99\ufe0f"
     }
+}
+```
+
+### stream/livestreams/en
+
+Obtain the current top streams in a particular category
+
+**URL**: https://kick.com/stream/livestreams/en
+
+**Method**: GET
+
+| Parameter | Type   | Description                                                                                                       |
+| --------- | ------ | ----------------------------------------------------------------------------------------------------------------- |
+| category  | string | Optional. Filters the results by category. Possible values are: "games", "irl", "music" , "gambling" , "creative" |
+| sort      | string | Optional. Sorts the results by the specified field. Known possible values are: "featured".                        |
+
+### Chat Messages
+
+#### Send
+
+JSON POST request
+
+**URL**: `/api/v1/chat-messages`
+
+**Method**: `POST`
+
+| Property    | Type    | Description                                                |
+| ----------- | ------- | ---------------------------------------------------------- |
+| chatroom_id | integer | The ID of the chatroom associated with the message         |
+| type        | string  | The type of the message, if available                      |
+| message     | string  | The text of the message                                    |
+| created_at  | integer | The Unix timestamp when the message was created            |
+| id          | string  | The unique identifier of the message                       |
+| reactions   | array   | An array of reactions (emotes) associated with the message |
+| emotes      | array   | An array of emotes associated with the message             |
+
+```json
+{
+    "chatroom_id": 259821,
+    "user": {
+        "id": 262331,
+        "username": "mattseabrook",
+        "risk_level_id": null,
+        "bio": "Matt & Megan Seabrook's Variety Stream - Retro Video Games, Art, and Software Development",
+        "year_started_trading": null,
+        "country": "",
+        "state": "",
+        "city": "",
+        "enable_live_notifications": true,
+        "instagram": "matthewseabrook",
+        "twitter": "",
+        "youtube": "",
+        "discord": "",
+        "tiktok": "mattseabrook",
+        "facebook": "",
+        "enable_onscreen_live_notifications": true,
+        "profilepic": "https://d2egosedh0nm8l.cloudfront.net/images/user/262331/profile_image/conversion/be1cdc95-f519-4a84-869c-08aaa6250501-medium.webp",
+        "is_2fa_setup": false,
+        "redirect": null,
+        "channel_can_be_updated": true,
+        "is_live": false,
+        "roles": [],
+        "streamer_channel": {
+            "id": 259825,
+            "user_id": 262331,
+            "slug": "mattseabrook",
+            "playback_url": "https://fa723fc1b171.us-west-2.playback.live-video.net/api/video/v1/us-west-2.196233775518.channel.ijAXYlFNAvzV.m3u8",
+            "name_updated_at": null,
+            "vod_enabled": true,
+            "subscription_enabled": false
+        },
+        "role": "Channel Host",
+        "verified": null,
+        "profile_thumb": "https://d2egosedh0nm8l.cloudfront.net/images/user/262331/profile_image/conversion/be1cdc95-f519-4a84-869c-08aaa6250501-medium.webp",
+        "isSuperAdmin": false,
+        "is_subscribed": null,
+        "follower_badges": [],
+        "months_subscribed": 0
+    },
+    "type": null,
+    "message": "Test",
+    "created_at": 1676794478,
+    "id": "temp_1676794478542",
+    "reactions": [],
+    "emotes": []
 }
 ```
