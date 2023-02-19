@@ -10,6 +10,7 @@ Cross-platform utility for KICK
     - [User](#user)
     - [Channels Followed](#channels-followed)
     - [Current Viewers](#current-viewers)
+    - [Top Categories](#top-categories)
 
 # Developer Notes
 
@@ -17,7 +18,9 @@ Cross-platform utility for KICK
 
 ### User
 
-URL: `/api/v1/user`
+**URL**: `/api/v1/user`
+
+**Method**: `GET`
 
 | Property                              | Type           | Description                                                                                                    |
 | ------------------------------------- | -------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -94,6 +97,8 @@ URL: `/api/v1/user`
 Returns an array of channel data, each with the following properties:
 
 **URL**: `/api/v1/channels/followed`
+
+**Method**: `GET`
 
 | Property                                 | Type           | Description                                                                                                                                                                       |
 | ---------------------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -204,3 +209,60 @@ Returns an array of channel data, each with the following properties:
 ### Current Viewers
 
 **URL**: `/api/v1/current-viewers?ids[]=151368`
+
+**Method**: `GET`
+
+- Where does this ID come from?
+
+### Top Categories
+
+Fetches platform data for the top categories.
+
+**URL**: `/api/v1/categories-top`
+
+**Method**: `GET`
+
+| Property      | Type             | Description                                                                   |
+| ------------- | ---------------- | ----------------------------------------------------------------------------- |
+| id            | integer          | The unique identifier of the subcategory                                      |
+| category_id   | integer          | The identifier of the parent category                                         |
+| name          | string           | The name of the subcategory                                                   |
+| slug          | string           | The URL-friendly version of the subcategory name                              |
+| tags          | array of strings | The tags associated with the subcategory                                      |
+| description   | string, null     | The description of the subcategory, or null if none exists                    |
+| deleted_at    | datetime, null   | The time that the subcategory was deleted, or null if it has not been deleted |
+| banner.src    | string           | The URL of the subcategory banner image                                       |
+| banner.srcset | string           | The URL and size of the subcategory banner image in various resolutions       |
+| viewers       | integer          | The current number of viewers in the subcategory                              |
+| category.id   | integer          | The unique identifier of the parent category                                  |
+| category.name | string           | The name of the parent category                                               |
+| category.slug | string           | The URL-friendly version of the parent category name                          |
+| category.icon | string           | The emoji icon associated with the parent category                            |
+
+
+**Sample Response:**
+
+```json
+{
+    "id": 15,
+    "category_id": 2,
+    "name": "Just Chatting",
+    "slug": "just-chatting",
+    "tags": [
+        "IRL"
+    ],
+    "description": null,
+    "deleted_at": null,
+    "banner": {
+        "src": "https:\/\/d2egosedh0nm8l.cloudfront.net\/images\/subcategories\/15\/banner\/conversion\/just-chatting-banner.webp",
+        "srcset": "https:\/\/d2egosedh0nm8l.cloudfront.net\/images\/subcategories\/15\/banner\/responsives\/just-chatting___banner_600_800.webp 600w, https:\/\/d2egosedh0nm8l.cloudfront.net\/images\/subcategories\/15\/banner\/responsives\/just-chatting___banner_501_668.webp 501w, https:\/\/d2egosedh0nm8l.cloudfront.net\/images\/subcategories\/15\/banner\/responsives\/just-chatting___banner_420_560.webp 420w, https:\/\/d2egosedh0nm8l.cloudfront.net\/images\/subcategories\/15\/banner\/responsives\/just-chatting___banner_351_468.webp 351w, https:\/\/d2egosedh0nm8l.cloudfront.net\/images\/subcategories\/15\/banner\/responsives\/just-chatting___banner_294_392.webp 294w, https:\/\/d2egosedh0nm8l.cloudfront.net\/images\/subcategories\/15\/banner\/responsives\/just-chatting___banner_245_327.webp 245w, data:image\/svg+xml;base64,PCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4KPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbDpzcGFjZT0icHJlc2VydmUiIHg9IjAiCiB5PSIwIiB2aWV3Qm94PSIwIDAgNjAwIDgwMCI+Cgk8aW1hZ2Ugd2lkdGg9IjYwMCIgaGVpZ2h0PSI4MDAiIHhsaW5rOmhyZWY9ImRhdGE6aW1hZ2UvanBlZztiYXNlNjQsLzlqLzRBQVFTa1pKUmdBQkFRRUFZQUJnQUFELy9nQTdRMUpGUVZSUFVqb2daMlF0YW5CbFp5QjJNUzR3SUNoMWMybHVaeUJKU2tjZ1NsQkZSeUIyT0RBcExDQnhkV0ZzYVhSNUlEMGdPVEFLLzlzQVF3QURBZ0lEQWdJREF3TURCQU1EQkFVSUJRVUVCQVVLQndjR0NBd0tEQXdMQ2dzTERRNFNFQTBPRVE0TEN4QVdFQkVURkJVVkZRd1BGeGdXRkJnU0ZCVVUvOXNBUXdFREJBUUZCQVVKQlFVSkZBMExEUlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVS84QUFFUWdBS3dBZ0F3RWlBQUlSQVFNUkFmL0VBQjhBQUFFRkFRRUJBUUVCQUFBQUFBQUFBQUFCQWdNRUJRWUhDQWtLQy8vRUFMVVFBQUlCQXdNQ0JBTUZCUVFFQUFBQmZRRUNBd0FFRVFVU0lURkJCaE5SWVFjaWNSUXlnWkdoQ0NOQ3NjRVZVdEh3SkROaWNvSUpDaFlYR0JrYUpTWW5LQ2txTkRVMk56ZzVPa05FUlVaSFNFbEtVMVJWVmxkWVdWcGpaR1ZtWjJocGFuTjBkWFozZUhsNmc0U0Zob2VJaVlxU2s1U1ZscGVZbVpxaW82U2xwcWVvcWFxeXM3UzF0cmU0dWJyQ3c4VEZ4c2ZJeWNyUzA5VFYxdGZZMmRyaDR1UGs1ZWJuNk9ucThmTHo5UFgyOS9qNSt2L0VBQjhCQUFNQkFRRUJBUUVCQVFFQUFBQUFBQUFCQWdNRUJRWUhDQWtLQy8vRUFMVVJBQUlCQWdRRUF3UUhCUVFFQUFFQ2R3QUJBZ01SQkFVaE1RWVNRVkVIWVhFVElqS0JDQlJDa2FHeHdRa2pNMUx3RldKeTBRb1dKRFRoSmZFWEdCa2FKaWNvS1NvMU5qYzRPVHBEUkVWR1IwaEpTbE5VVlZaWFdGbGFZMlJsWm1kb2FXcHpkSFYyZDNoNWVvS0RoSVdHaDRpSmlwS1RsSldXbDVpWm1xS2pwS1dtcDZpcHFyS3p0TFcydDdpNXVzTER4TVhHeDhqSnl0TFQxTlhXMTlqWjJ1TGo1T1htNStqcDZ2THo5UFgyOS9qNSt2L2FBQXdEQVFBQ0VRTVJBRDhBdGZGNUJlK0g1WEErWWpBelh6dDRLMVVlRTlmQ05JTXl0eml2WHZpdjQ0VVFQYllBQkZmTGsycHpmOEpRc3U3S2J2V29yMGVTWHMwenJ3cjVGek05ditKUGpTQld0NExkdDhrcEJPSzlzK0ZiTkpvMXJLM0IyQ3ZqeTl2QnFIaUczd3hjTGl2cUg0U2E1TWx0RkE0ekdCeFhCR2kzTGtXNTIxcCswWE1qNW0rT0d0NmkrdG1PTjJSUFd2TS9EczgwdXNLa3JsOG12Y3ZqWDRaa3ZQM3NLWlk4Y0NzLzRXL3M4YXpxc2NlcHRBeFRPUnhYMG1JamFiUEppbTJZZW1hZXVtNm1KcHhrTjByNkQrSGVveHBCR0VPQ2VsWUd1ZkJQVlhsalpvZGtjZkpKRlNXVHA0Y3VVaXo5d1lPSzh5aFNrNjNOMFBUbEtLcDJQWXo0RzhPNnhBalhjb0RkY0d2UU5FdWRHOE1hR3R0YU1oQ2pnWXJ5TGV3WWNtcjBic1JqY2NWOVBMRFJscTJRc09ybnFTNnBwbmlDRm9yaGxqRERHUlhIYTE4TGZEelJTVEpLR2NuUEpyQVdWMGI1V0kraHFacm1Wb2VaR1A0MUVjS283TXQwVmZSbi85az0iPgoJPC9pbWFnZT4KPC9zdmc+ 32w"
+    },
+    "viewers": 13447,
+    "category": {
+        "id": 2,
+        "name": "IRL",
+        "slug": "irl",
+        "icon": "\ud83c\udf99\ufe0f"
+    }
+}
+```
