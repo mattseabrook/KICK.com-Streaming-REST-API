@@ -6,20 +6,35 @@ Cross-platform utility for KICK
 
 - [KICKstand](#kickstand)
 - [Developer Notes](#developer-notes)
-  - [API](#api)
-    - [User](#user)
-    - [Channels Followed](#channels-followed)
-    - [Current Viewers](#current-viewers)
-    - [Top Categories](#top-categories)
+- [API](#api)
+  - [User](#user)
+  - [Channels](#channels)
+    - [Followed](#followed)
+  - [Current Viewers](#current-viewers)
+  - [Categories](#categories)
+    - [Top](#top)
     - [stream/livestreams/en](#streamlivestreamsen)
-    - [Chat Messages](#chat-messages)
-      - [Send](#send)
+  - [Chat Messages](#chat-messages)
+    - [Send](#send)
 
 # Developer Notes
 
-## API
+Working theory for the prototype is to run a browser in headless mode in the background:
 
-### User
+```cmd
+@echo off
+setlocal
+set TITLE=myapp
+start /B "chrome" /D "C:\Program Files (x86)\Google\Chrome\Application" chrome.exe --headless --disable-gpu --remote-debugging-port=9222 --user-data-dir=C:\temp --title=%TITLE%
+tasklist /fi "WindowTitle eq %TITLE%*" | findstr chrome.exe > temp.txt
+for /f "tokens=2" %%a in (temp.txt) do set pid=%%a
+del temp.txt
+echo Process ID is %pid%
+```
+
+# API
+
+## User
 
 **URL**: `/api/v1/user`
 
@@ -95,7 +110,9 @@ Cross-platform utility for KICK
 }
 ```
 
-### Channels Followed
+## Channels 
+
+### Followed
 
 Returns an array of channel data, each with the following properties:
 
@@ -209,7 +226,7 @@ Returns an array of channel data, each with the following properties:
 }
 ```
 
-### Current Viewers
+## Current Viewers
 
 **URL**: `/api/v1/current-viewers?ids[]=151368`
 
@@ -217,7 +234,9 @@ Returns an array of channel data, each with the following properties:
 
 - Where does this ID come from?
 
-### Top Categories
+## Categories
+
+### Top
 
 Fetches platform data for the top categories.
 
@@ -283,9 +302,9 @@ Obtain the current top streams in a particular category
 | category  | string | Optional. Filters the results by category. Possible values are: "games", "irl", "music" , "gambling" , "creative" |
 | sort      | string | Optional. Sorts the results by the specified field. Known possible values are: "featured".                        |
 
-### Chat Messages
+## Chat Messages
 
-#### Send
+### Send
 
 JSON POST request
 
