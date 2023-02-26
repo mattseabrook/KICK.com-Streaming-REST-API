@@ -36,6 +36,9 @@ Working theory for the prototype is to run a browser in headless mode in the bac
 REM Open a WebSocket connection to the DevTools Protocol on the port specified in the --remote-debugging-port flag. You can use a tool like ncat to do this:
 
 ncat.exe localhost 9222
+
+REM See if the headless browser is running
+netstat -ano | findstr ":9222"
 ```
 
 Then you supply it JSON via ncat: 
@@ -46,6 +49,12 @@ Then you supply it JSON via ncat:
 {"id": 2, "method": "Network.setMonitoringXHREnabled", "params": {"enabled": true}}
 
 {"id": 3, "method": "Network.webSocketFrameReceived", "params": {"pattern": "wss://*.pusher.com/*"}}
+```
+
+Query it:
+
+```bash
+curl -s http://localhost:9222/json | jq -r ".[0].webSocketDebuggerUrl" | xargs -I {} curl -s {} | jq -r ".result.title"
 ```
 
 ## Chat
