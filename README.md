@@ -9,7 +9,7 @@ Cross-platform utility for KICK
 - [API](#api)
   - [User](#user)
   - [Channels](#channels)
-    - [](#)
+    - [username](#username)
     - [Followed](#followed)
   - [Current Viewers](#current-viewers)
   - [Categories](#categories)
@@ -173,7 +173,7 @@ Sample WebSocket message:
 
 ## Channels 
 
-### <username>
+### username
 
 **URL**: `/api/v1/channels/mattseabrook`
 
