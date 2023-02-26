@@ -2,6 +2,8 @@ Cross-platform utility for KICK
 
 **Table-of-Contents**
 
+- [Usage](#usage)
+  - [TTS (Text-to-Speech)](#tts-text-to-speech)
 - [Developer Notes](#developer-notes)
   - [Chat](#chat)
 - [API](#api)
@@ -14,6 +16,16 @@ Cross-platform utility for KICK
     - [stream/livestreams/en](#streamlivestreamsen)
   - [Chat Messages](#chat-messages)
     - [Send](#send)
+
+# Usage
+
+## TTS (Text-to-Speech)
+
+Open the Windows Command Prompt and supply the username and browser to use: `KICKstand.cmd <username> <browser>`
+
+```cmd
+KICKstand.cmd mattseabrook brave
+```
 
 # Developer Notes
 
