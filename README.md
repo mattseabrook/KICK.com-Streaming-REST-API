@@ -3,6 +3,7 @@ Cross-platform utility for KICK
 **Table-of-Contents**
 
 - [Developer Notes](#developer-notes)
+  - [Chat](#chat)
 - [API](#api)
   - [User](#user)
   - [Channels](#channels)
@@ -27,6 +28,51 @@ tasklist /fi "WindowTitle eq %TITLE%*" | findstr chrome.exe > temp.txt
 for /f "tokens=2" %%a in (temp.txt) do set pid=%%a
 del temp.txt
 echo Process ID is %pid%
+```
+
+## Chat
+
+Using the Pusher js library.
+
+Sample WebSocket message:
+
+```json
+{
+  "event": "App\\Events\\ChatMessageSentEvent",
+  "data": {
+    "message": {
+      "id": "48b77917-9cc6-4fd3-9a9c-e62dd89a95e2",
+      "message": "I SAW THAT :) :) :)\u00a0",
+      "type": "",
+      "replied_to": null,
+      "is_info": null,
+      "link_preview": null,
+      "chatroom_id": "259821",
+      "role": null,
+      "created_at": 1677379978,
+      "action": null,
+      "optional_message": null,
+      "months_subscribed": 0,
+      "subscriptions_count": null,
+      "giftedUsers": null
+    },
+    "user": {
+      "id": 242977,
+      "username": "Luwu",
+      "role": null,
+      "isSuperAdmin": false,
+      "verified": false,
+      "follower_badges": [
+        "OG",
+        "VIP"
+      ],
+      "is_subscribed": false,
+      "months_subscribed": 0,
+      "quantity_gifted": 0
+    }
+  },
+  "channel": "chatrooms.259821"
+}
 ```
 
 # API
