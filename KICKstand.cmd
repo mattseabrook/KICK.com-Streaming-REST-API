@@ -19,7 +19,7 @@ if "%2" == "chrome" (
   --user-data-dir="%tempfolder%" ^
   https://www.kick.com/%1
 ) else if "%2" == "brave" (
-  start "" brave.exe --headless ^
+  start "" "C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe" --headless ^
   --remote-debugging-port=9222 ^
   --title="KICKstand" ^
   --user-data-dir="%tempfolder%" ^
