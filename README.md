@@ -29,17 +29,22 @@ KICKstand.cmd mattseabrook brave
 
 # Developer Notes
 
-Working theory for the prototype is to run a browser in headless mode in the background:
+Working theory for the prototype is to run a browser in headless mode in the background to intercept WebSocket network frames to get the chat messages:
 
 ```cmd
-@echo off
-setlocal
-set TITLE=myapp
-start /B "chrome" /D "C:\Program Files (x86)\Google\Chrome\Application" chrome.exe --headless --disable-gpu --remote-debugging-port=9222 --user-data-dir=C:\temp --title=%TITLE%
-tasklist /fi "WindowTitle eq %TITLE%*" | findstr chrome.exe > temp.txt
-for /f "tokens=2" %%a in (temp.txt) do set pid=%%a
-del temp.txt
-echo Process ID is %pid%
+REM Open a WebSocket connection to the DevTools Protocol on the port specified in the --remote-debugging-port flag. You can use a tool like ncat to do this:
+
+ncat.exe localhost 9222
+```
+
+Then you supply it JSON via ncat: 
+
+```json
+{"id": 1, "method": "Network.enable", "params": {}}
+
+{"id": 2, "method": "Network.setMonitoringXHREnabled", "params": {"enabled": true}}
+
+{"id": 3, "method": "Network.webSocketFrameReceived", "params": {"pattern": "wss://*.pusher.com/*"}}
 ```
 
 ## Chat
