@@ -9,6 +9,7 @@ Cross-platform utility for KICK
 - [API](#api)
   - [User](#user)
   - [Channels](#channels)
+    - [](#)
     - [Followed](#followed)
   - [Current Viewers](#current-viewers)
   - [Categories](#categories)
@@ -171,6 +172,75 @@ Sample WebSocket message:
 ```
 
 ## Channels 
+
+### <username>
+
+**URL**: `/api/v1/channels/mattseabrook`
+
+**Method**: `GET`
+
+```bash
+curl 'https://kick.com/api/v1/channels/mattseabrook' \
+  -H 'Accept: application/json, text/plain, */*' \
+  -H 'Authorization: Bearer x' \
+  -H 'Connection: keep-alive' \
+  -H 'Cookie: cf_clearance=x' \
+  -H 'Referer: https://kick.com/mattseabrook' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -H 'Sec-GPC: 1' \
+  -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36' \
+  -H 'X-Socket-ID: 18443.547130' \
+  -H 'X-XSRF-TOKEN: x' \
+  -H 'accept-language: en-US,en;q=0.8' \
+  --compressed
+```
+
+.livestream.id is the integer value used by other API end-points, such as to retrieve the current viewer count:
+
+```json
+    "livestream": {
+        "id": 202501,
+        "slug": "1b5ac-building-a-kick-bot-tts-and-chat-for-now-updated-bios-in-about-section-look-below-follow-us",
+        "channel_id": 259825,
+        "created_at": "2023-02-26 01:27:10",
+        "session_title": "Building a KICK bot (TTS and Chat for now) | UPDATED BIOs in ABOUT section look below | FOLLOW US",
+        "is_live": true,
+        "risk_level_id": null,
+        "source": "obs",
+        "twitch_channel": null,
+        "duration": 0,
+        "language": "English",
+        "is_mature": false,
+        "viewer_count": 7,
+        "thumbnail": {
+            "responsive": "https:\/\/stream.kick.com\/thumbnails\/livestream\/202501\/thumb34\/video_thumbnail\/responsives\/thumb34___video_thumbnail_1920_1080.webp 1920w, https:\/\/stream.kick.com\/thumbnails\/livestream\/202501\/thumb34\/video_thumbnail\/responsives\/thumb34___video_thumbnail_1606_903.webp 1606w, https:\/\/stream.kick.com\/thumbnails\/livestream\/202501\/thumb34\/video_thumbnail\/responsives\/thumb34___video_thumbnail_1344_756.webp 1344w, https:\/\/stream.kick.com\/thumbnails\/livestream\/202501\/thumb34\/video_thumbnail\/responsives\/thumb34___video_thumbnail_1124_632.webp 1124w, https:\/\/stream.kick.com\/thumbnails\/livestream\/202501\/thumb34\/video_thumbnail\/responsives\/thumb34___video_thumbnail_940_529.webp 940w, https:\/\/stream.kick.com\/thumbnails\/livestream\/202501\/thumb34\/video_thumbnail\/responsives\/thumb34___video_thumbnail_787_443.webp 787w, https:\/\/stream.kick.com\/thumbnails\/livestream\/202501\/thumb34\/video_thumbnail\/responsives\/thumb34___video_thumbnail_658_370.webp 658w, https:\/\/stream.kick.com\/thumbnails\/livestream\/202501\/thumb34\/video_thumbnail\/responsives\/thumb34___video_thumbnail_550_309.webp 550w, data:image\/svg+xml;base64,...",
+            "url": "https:\/\/stream.kick.com\/thumbnails\/livestream\/202501\/thumb34\/video_thumbnail\/thumb34.jpg"
+        },
+        "viewers": 7,
+        "categories": [
+            {
+                "id": 34,
+                "category_id": 5,
+                "name": "Software Development",
+                "slug": "software-development",
+                "tags": [
+                    "Creative"
+                ],
+                "description": null,
+                "deleted_at": null,
+                "category": {
+                    "id": 5,
+                    "name": "Creative",
+                    "slug": "creative",
+                    "icon": "\ud83c\udfa8"
+                }
+            }
+        ],
+        "tags": []
+    },
+```    
 
 ### Followed
 
