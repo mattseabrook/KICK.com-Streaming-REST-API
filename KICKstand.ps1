@@ -61,6 +61,14 @@ function ListenForWebSockets ($remoteDebuggingUrl) {
     }
 }
 
+
+function Speak-Text {
+    param($Text)
+    Add-Type -AssemblyName System.Speech
+    $speechSynthesizer = New-Object System.Speech.Synthesis.SpeechSynthesizer
+    $speechSynthesizer.Speak($Text)
+}
+
 Add-Type -AssemblyName System.Windows.Forms
 
 # Create a context menu with two sections and an Exit item
@@ -85,10 +93,18 @@ $exitItem.Add_Click({
 
 # Create a system tray icon and associate the context menu with it
 $notifyIcon = New-Object System.Windows.Forms.NotifyIcon
-$notifyIcon.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon([System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName)
+#$notifyIcon.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon([System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName)
+$scriptPath = Split-Path -Parent -Path $MyInvocation.MyCommand.Definition
+$iconPath = Join-Path -Path $scriptPath -ChildPath "kick.ico"
+$notifyIcon.Icon = New-Object System.Drawing.Icon -ArgumentList $iconPath
 $notifyIcon.ContextMenuStrip = $contextMenu
 $notifyIcon.Visible = $true
 
 # Create a custom ApplicationContext to keep the script running
 $context = New-Object System.Windows.Forms.ApplicationContext
 [System.Windows.Forms.Application]::Run($context)
+
+
+
+
+# Speak-Text -Text "Hello, I am a text-to-speech system in PowerShell"
