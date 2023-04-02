@@ -1,13 +1,25 @@
+# to be removed once INI file is implemented
 param(
     [string]$ip = "localhost",
     [int]$port = 9222
 )
 
-$remoteDebuggingUrl = "http://${ip}:${port}"
+<#
+    .SYNOPSIS
+        A function to check if a service is running on a given port.
 
-function Test-Port ($hostname, $port, $timeout = 1000) {
+    .DESCRIPTION
+        This function takes a string (IP Address) and integer (Port Number) as input and checks if a service is running.
+
+    .PARAMETER hostname
+        IP Address in string format such as "127.0.0.1"
+
+    .PARAMETER port
+        Port Number in integer format such as 9222
+#>
+function Test-Port ($hostname, $port) {
     try {
-        $connection = Test-Connection -ComputerName $hostname -Port $port -Delay $timeout -Count 1 -ErrorAction Stop
+        $connection = Test-Connection -ComputerName $hostname -Port $port -Delay 1000 -Count 1 -ErrorAction Stop
         return $true
     }
     catch {
@@ -15,11 +27,17 @@ function Test-Port ($hostname, $port, $timeout = 1000) {
     }
 }
 
+
+
+# to be removed later into it's own function
 if (-not (Test-Port -hostname $ip -port $port)) {
     Write-Host "Nothing running on port $port."
     #exit
 }
 
+
+
+$remoteDebuggingUrl = "http://${ip}:${port}"    # To be removed later
 function ListenForWebSockets ($remoteDebuggingUrl) {
     # Import necessary namespaces
     Add-Type -AssemblyName System.Web.Extensions
@@ -110,7 +128,10 @@ $tts.Add_Click({
 })
 
 # Help
-$help.Add_Click({ Write-Host "Section 3 - Help clicked" })
+$help.Add_Click({
+    $url = "https://github.com/mattseabrook/KICKstand#usage"
+    Start-Process $url
+})
 
 # About
 $about.Add_Click({
