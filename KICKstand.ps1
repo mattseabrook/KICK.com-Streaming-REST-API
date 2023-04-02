@@ -114,7 +114,7 @@ $help.Add_Click({ Write-Host "Section 3 - Help clicked" })
 
 # About
 $about.Add_Click({
-    Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Windows.Forms
     $aboutBox = New-Object System.Windows.Forms.Form
     $aboutBox.Text = "KICKstand v.0.1"
     $aboutBox.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedToolWindow
@@ -122,13 +122,54 @@ $about.Add_Click({
     $aboutBox.MinimizeBox = $false
     $aboutBox.StartPosition = "CenterScreen"
     $aboutBox.ClientSize = New-Object System.Drawing.Size(300, 200)
-    
-    $label = New-Object System.Windows.Forms.Label
-    $label.Text = "Lorem ipsum text goes here."
-    $label.TextAlign = [System.Drawing.ContentAlignment]::MiddleCenter
-    $label.Dock = [System.Windows.Forms.DockStyle]::Fill
-    $label.Font = New-Object System.Drawing.Font("Arial", 12, [System.Drawing.FontStyle]::Regular)
-    $aboutBox.Controls.Add($label)
+
+    $panel = New-Object System.Windows.Forms.Panel
+    $panel.Dock = [System.Windows.Forms.DockStyle]::Fill
+    $panel.AutoScroll = $true
+    $aboutBox.Controls.Add($panel)
+
+    $table = New-Object System.Windows.Forms.TableLayoutPanel
+    $table.RowCount = 4
+    $table.ColumnCount = 1
+    $table.Dock = [System.Windows.Forms.DockStyle]::Top
+    $table.AutoSize = $true
+    $table.Margin = New-Object System.Windows.Forms.Padding(10)
+
+    $label1 = New-Object System.Windows.Forms.Label
+    $label1.Text = "Author: Matt Seabrook"
+    $label1.Font = New-Object System.Drawing.Font("Arial", 12, [System.Drawing.FontStyle]::Regular)
+    $label1.AutoSize = $true
+    $table.Controls.Add($label1, 0, 0)
+
+    $label2 = New-Object System.Windows.Forms.Label
+    $label2.Text = "Email: info@mattseabrook.net"
+    $label2.Font = New-Object System.Drawing.Font("Arial", 12, [System.Drawing.FontStyle]::Regular)
+    $label2.AutoSize = $true
+    $table.Controls.Add($label2, 0, 1)
+
+    $label3 = New-Object System.Windows.Forms.Label
+    $label3.Text = "Discord: lorem ipsum"
+    $label3.Font = New-Object System.Drawing.Font("Arial", 12, [System.Drawing.FontStyle]::Regular)
+    $label3.AutoSize = $true
+    $label3.Padding = New-Object System.Windows.Forms.Padding(0, 0, 0, 20)
+    $table.Controls.Add($label3, 0, 2)
+
+    $panel.Controls.Add($table)
+
+    $linkLabel = New-Object System.Windows.Forms.LinkLabel
+    $linkLabel.Text = "KICKstand on GitHub"
+    $linkLabel.AutoSize = $true
+    $linkLabel.Location = New-Object System.Drawing.Point(($aboutBox.ClientSize.Width - $linkLabel.Width) / 2, $table.Bottom + 20)
+    $linkLabel.Font = New-Object System.Drawing.Font("Arial", 12, [System.Drawing.FontStyle]::Underline)
+    $linkLabel.LinkBehavior = [System.Windows.Forms.LinkBehavior]::HoverUnderline
+    $linkLabel.LinkColor = [System.Drawing.Color]::Blue
+    $linkLabel.ActiveLinkColor = [System.Drawing.Color]::Blue
+    $linkLabel.VisitedLinkColor = [System.Drawing.Color]::Purple
+    $linkLabel.Links.Add(0, $linkLabel.Text.Length,"https://github.com/mattseabrook/KICKstand")
+    $linkLabel.Add_Click({
+    [System.Diagnostics.Process]::Start($linkLabel.Links[$linkLabel.Links.IndexOf($linkLabel.Links[0])].LinkData)
+    })
+    $table.Controls.Add($linkLabel, 0, 3)
     
     $button = New-Object System.Windows.Forms.Button
     $button.Text = "OK"
