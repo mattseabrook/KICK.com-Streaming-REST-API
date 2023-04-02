@@ -73,8 +73,8 @@ Add-Type -AssemblyName System.Windows.Forms
 
 # Create a context menu with two sections and an Exit item
 $contextMenu = New-Object System.Windows.Forms.ContextMenuStrip
-$section1 = $contextMenu.Items.Add("Section 1 - Lorem Ipsum")
-$section2 = $contextMenu.Items.Add("Section 2 - Hello World")
+$commands = $contextMenu.Items.Add("Commands")
+$tts = $contextMenu.Items.Add("TTS")
 
 $separator = New-Object System.Windows.Forms.ToolStripSeparator
 [void]$contextMenu.Items.Add($separator)
@@ -88,14 +88,17 @@ $separator2 = New-Object System.Windows.Forms.ToolStripSeparator
 $exitItem = $contextMenu.Items.Add("Exit")
 
 # Define actions for each section and the Exit item
-$section1.Add_Click({ Write-Host "Section 1 - Lorem Ipsum clicked" })
-$section2.Add_Click({ Write-Host "Section 2 - Hello World clicked" })
+$commands.Add_Click({ Write-Host "Section 1 - Lorem Ipsum clicked" })
+$tts.Add_Click({ Write-Host "Section 2 - Hello World clicked" })
 $exitItem.Add_Click({
         $notifyIcon.Visible = $false
         $contextMenu.Dispose()
         [System.Windows.Forms.Application]::Exit()
         exit
     })
+
+# Set Checked property for Command 1 and TTS Option 1
+$commands.Checked = $true
 
 # Create a system tray icon and associate the context menu with it
 $notifyIcon = New-Object System.Windows.Forms.NotifyIcon
