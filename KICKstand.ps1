@@ -79,17 +79,70 @@ $tts = $contextMenu.Items.Add("TTS")
 $separator = New-Object System.Windows.Forms.ToolStripSeparator
 [void]$contextMenu.Items.Add($separator)
 
-$section3 = $contextMenu.Items.Add("Help")
-$section4 = $contextMenu.Items.Add("About")
+$help = $contextMenu.Items.Add("Help")
+$about = $contextMenu.Items.Add("About")
 
 $separator2 = New-Object System.Windows.Forms.ToolStripSeparator
 [void]$contextMenu.Items.Add($separator2)
 
 $exitItem = $contextMenu.Items.Add("Exit")
 
-# Define actions for each section and the Exit item
-$commands.Add_Click({ Write-Host "Section 1 - Lorem Ipsum clicked" })
-$tts.Add_Click({ Write-Host "Section 2 - Hello World clicked" })
+#
+# Define actions for each Context Menu item
+#
+
+# Channel Commands
+$commands.Add_Click({
+    if ($commands.Checked) {
+        $commands.Checked = $false
+    } else {
+        $commands.Checked = $true
+    }
+})
+
+# Text-to-Speech
+$tts.Add_Click({
+    if ($tts.Checked) {
+        $tts.Checked = $false
+    } else {
+        $tts.Checked = $true
+    }
+})
+
+# Help
+$help.Add_Click({ Write-Host "Section 3 - Help clicked" })
+
+# About
+$about.Add_Click({
+    Add-Type -AssemblyName System.Windows.Forms
+    $aboutBox = New-Object System.Windows.Forms.Form
+    $aboutBox.Text = "KICKstand v.0.1"
+    $aboutBox.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedToolWindow
+    $aboutBox.MaximizeBox = $false
+    $aboutBox.MinimizeBox = $false
+    $aboutBox.StartPosition = "CenterScreen"
+    $aboutBox.ClientSize = New-Object System.Drawing.Size(300, 200)
+    
+    $label = New-Object System.Windows.Forms.Label
+    $label.Text = "Lorem ipsum text goes here."
+    $label.TextAlign = [System.Drawing.ContentAlignment]::MiddleCenter
+    $label.Dock = [System.Windows.Forms.DockStyle]::Fill
+    $label.Font = New-Object System.Drawing.Font("Arial", 12, [System.Drawing.FontStyle]::Regular)
+    $aboutBox.Controls.Add($label)
+    
+    $button = New-Object System.Windows.Forms.Button
+    $button.Text = "OK"
+    $button.Width = 80
+    $button.Height = 25
+    $button.DialogResult = [System.Windows.Forms.DialogResult]::OK
+    $button.Dock = [System.Windows.Forms.DockStyle]::Bottom
+    $aboutBox.AcceptButton = $button
+    $aboutBox.Controls.Add($button)
+
+    $aboutBox.ShowDialog()
+})
+
+# Exit
 $exitItem.Add_Click({
         $notifyIcon.Visible = $false
         $contextMenu.Dispose()
@@ -99,6 +152,7 @@ $exitItem.Add_Click({
 
 # Set Checked property for Command 1 and TTS Option 1
 $commands.Checked = $true
+$tts.Checked = $true
 
 # Create a system tray icon and associate the context menu with it
 $notifyIcon = New-Object System.Windows.Forms.NotifyIcon
