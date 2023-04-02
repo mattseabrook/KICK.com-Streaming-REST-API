@@ -79,6 +79,12 @@ $section2 = $contextMenu.Items.Add("Section 2 - Hello World")
 $separator = New-Object System.Windows.Forms.ToolStripSeparator
 [void]$contextMenu.Items.Add($separator)
 
+$section3 = $contextMenu.Items.Add("Help")
+$section4 = $contextMenu.Items.Add("About")
+
+$separator2 = New-Object System.Windows.Forms.ToolStripSeparator
+[void]$contextMenu.Items.Add($separator2)
+
 $exitItem = $contextMenu.Items.Add("Exit")
 
 # Define actions for each section and the Exit item
@@ -99,6 +105,7 @@ $iconPath = Join-Path -Path $scriptPath -ChildPath "kick.ico"
 $notifyIcon.Icon = New-Object System.Drawing.Icon -ArgumentList $iconPath
 $notifyIcon.ContextMenuStrip = $contextMenu
 $notifyIcon.Visible = $true
+$notifyIcon.Text = "KICKstand v.0.1"
 
 # Create a custom ApplicationContext to keep the script running
 $context = New-Object System.Windows.Forms.ApplicationContext
