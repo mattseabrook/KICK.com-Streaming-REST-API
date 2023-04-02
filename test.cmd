@@ -1,1 +1,0 @@
-for /f "tokens=1 delims=," %%i in ('curl -s http://localhost:9222/json/list ^| jq -r ".[] | select(.type == \"page\").id"') do curl -s -X POST -H "Content-Type: application/json" -d "{\"id\":1,\"method\":\"Page.captureScreenshot\",\"params\":{\"format\":\"png\",\"clip\":{},\"fromSurface\":true}}" http://localhost:9222/session/%%i | jq .
