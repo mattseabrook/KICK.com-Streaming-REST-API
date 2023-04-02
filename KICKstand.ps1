@@ -1,9 +1,8 @@
-# KICKstand.ps1 is a PowerShell script that allows you to interact with a Chrome browser instance via the Chrome DevTools Protocol,
-# allowing you to monitor your KICK Chat for Channel Commands and TTS messages
+# KICKstand.ps1
 #
-#   Author: Matt Seabrook
-#   Email: info@mattseabrook.net
-#   Discord: lorem ipsum
+# Author: Matt Seabrook
+# Email: info@mattseabrook.net
+# Discord: lorem ipsum
 #
 # MIT License
 #

@@ -1,7 +1,11 @@
-Cross-platform utility for KICK
+ `KICKstand` is a `PowerShell` script that silently & automatically interacts with a Chromium browser instance via the DevTools Protocol,
+ to sniff out WebSocket messages from the KICK Chat and use them to trigger TTS messages, and Channel Commands.
+
+# allowing the WebSocket data of the KICK Chat to be used on tfor Channel Commands and TTS messages
 
 **Table-of-Contents**
 
+- [allowing the WebSocket data of the KICK Chat to be used on tfor Channel Commands and TTS messages](#allowing-the-websocket-data-of-the-kick-chat-to-be-used-on-tfor-channel-commands-and-tts-messages)
 - [Usage](#usage)
   - [TTS (Text-to-Speech)](#tts-text-to-speech)
 - [Developer Notes](#developer-notes)
