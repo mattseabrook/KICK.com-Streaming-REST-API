@@ -80,12 +80,16 @@ function ListenForWebSockets ($remoteDebuggingUrl) {
 }
 
 
+# Later to be embedded into a function
 function Speak-Text {
     param($Text)
     Add-Type -AssemblyName System.Speech
     $speechSynthesizer = New-Object System.Speech.Synthesis.SpeechSynthesizer
     $speechSynthesizer.Speak($Text)
 }
+# Speak-Text -Text "Hello, I am a text-to-speech system in PowerShell"
+
+
 
 Add-Type -AssemblyName System.Windows.Forms
 
@@ -218,7 +222,6 @@ $tts.Checked = $true
 
 # Create a system tray icon and associate the context menu with it
 $notifyIcon = New-Object System.Windows.Forms.NotifyIcon
-#$notifyIcon.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon([System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName)
 $scriptPath = Split-Path -Parent -Path $MyInvocation.MyCommand.Definition
 $iconPath = Join-Path -Path $scriptPath -ChildPath "kick.ico"
 $notifyIcon.Icon = New-Object System.Drawing.Icon -ArgumentList $iconPath
@@ -229,8 +232,3 @@ $notifyIcon.Text = "KICKstand v.0.1"
 # Create a custom ApplicationContext to keep the script running
 $context = New-Object System.Windows.Forms.ApplicationContext
 [System.Windows.Forms.Application]::Run($context)
-
-
-
-
-# Speak-Text -Text "Hello, I am a text-to-speech system in PowerShell"
