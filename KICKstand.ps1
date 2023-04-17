@@ -2,7 +2,7 @@
 #
 # Author: Matt Seabrook
 # Email: info@mattseabrook.net
-# Discord: lorem ipsum
+# Discord: Matthew Seabrook#6243
 #
 # MIT License
 #
@@ -22,8 +22,8 @@ $ini = @"
 ; KICKstand configuration file
 
 [config]
-
-
+commandsEnabled=false
+ttsEnabled=false
 
 [browser]
 ip=127.0.0.1
@@ -73,7 +73,7 @@ function about {
     $table.Controls.Add($label2, 0, 1)
 
     $label3 = New-Object System.Windows.Forms.Label
-    $label3.Text = "Discord: lorem ipsum"
+    $label3.Text = "Discord: Matthew Seabrook#6243"
     $label3.Font = New-Object System.Drawing.Font("Arial", 12, [System.Drawing.FontStyle]::Regular)
     $label3.AutoSize = $true
     $label3.Padding = New-Object System.Windows.Forms.Padding(0, 0, 0, 20)
@@ -122,8 +122,6 @@ function about {
     .PARAMETER port
         Port Number in integer format such as 9222
 #>
-$ip = "127.0.0.1"
-$port = 9222
 function Test-Port ($ip, $port) {
     try {
         $connection = Test-Connection -ComputerName $ip -Port $port -Delay 1000 -Count 1 -ErrorAction Stop
@@ -132,14 +130,6 @@ function Test-Port ($ip, $port) {
     catch {
         return $false
     }
-}
-
-
-
-# to be removed later into it's own function
-if (-not (Test-Port -hostname $ip -port $port)) {
-    Write-Host "Nothing running on port $port."
-    #exit
 }
 
 
@@ -196,36 +186,26 @@ function ListenForWebSockets {
 
 <#
     .SYNOPSIS
-        Builds the Context Menu
+        Enables the Context Menu
 
     .DESCRIPTION
-        This function builds and populates the Context Menu for the KICKstand icon in the system tray.
+        This function builds and populates the Context Menu for the KICKstand icon in the system tray, and defines what happens the user clicks on a Context Menu item.
 #>
-function contextMenuBuild {
-    $commands = $contextMenu.Items.Add("Commands")
-    $tts = $contextMenu.Items.Add("TTS")
+function contextMenu {
+    $commands = $state.contextMenu.Items.Add("Commands")
+    $tts = $state.contextMenu.Items.Add("TTS")
 
     $separator = New-Object System.Windows.Forms.ToolStripSeparator
-    [void]$contextMenu.Items.Add($separator)
+    [void]$state.contextMenu.Items.Add($separator)
 
-    $help = $contextMenu.Items.Add("Help")
-    $about = $contextMenu.Items.Add("About")
+    $help = $state.contextMenu.Items.Add("Help")
+    $about = $state.contextMenu.Items.Add("About")
 
     $separator2 = New-Object System.Windows.Forms.ToolStripSeparator
-    [void]$contextMenu.Items.Add($separator2)
+    [void]$state.contextMenu.Items.Add($separator2)
 
-    $exitItem = $contextMenu.Items.Add("Exit")
-}
+    $exitItem = $state.contextMenu.Items.Add("Exit")
 
-
-<#
-    .SYNOPSIS
-        Sets up the Context Menu item actions.
-
-    .DESCRIPTION
-        This function defines what happens the user clicks on a Context Menu item.
-#>
-function contextMenuActions {
     # Channel Commands
     $commands.Add_Click({
         if ($commands.Checked) {
@@ -265,7 +245,6 @@ function contextMenuActions {
 }
 
 
-# Later to be embedded into a function
 # Speak-Text -Text "Hello, I am a text-to-speech system in PowerShell"
 function Speak-Text {
     param($Text)
@@ -280,40 +259,54 @@ function Speak-Text {
 #
 Add-Type -AssemblyName System.Windows.Forms
 
+# Object to manage application state
 $state = New-Object -TypeName System.Management.Automation.PSObject
-$state | Add-Member -MemberType NoteProperty -Name "Browser" -Value "Brave"
-$state | Add-Member -MemberType NoteProperty -Name "IPAddress" -Value "127.0.0.1"
-$state | Add-Member -MemberType NoteProperty -Name "Port" -Value 9222
-$state | Add-Member -MemberType NoteProperty -Name "ContextMenu" -Value (New-Object System.Windows.Forms.ContextMenuStrip)
-$state | Add-Member -MemberType NoteProperty -Name "TempFolder" -Value "$env:USERPROFILE\temp\KICKstand"
-$state | Add-Member -MemberType NoteProperty -Name "PIDFile" -Value "$state.TempFolder\PID"
 
-if (-not (Test-Path $state.TempFolder)) {
-    New-Item -ItemType Directory -Path $state.TempFolder
-}
-if (-not (Test-Path $state.PIDFile)) {
-    New-Item -ItemType File -Path $state.PIDFile
-}
-Set-Content -Path $state.PIDFile -Value $PID
+# Static application state members
+$state | Add-Member -MemberType NoteProperty -Name "context" -Value (New-Object System.Windows.Forms.ApplicationContext)
+$state | Add-Member -MemberType NoteProperty -Name "contextMenu" -Value (New-Object System.Windows.Forms.ContextMenuStrip)
+$state | Add-Member -MemberType NoteProperty -Name "tempFolder" -Value "$env:USERPROFILE\temp\KICKstand"
+$state | Add-Member -MemberType NoteProperty -Name "pidFile" -Value "$state:tempFolder\PID"
+$state | Add-Member -MemberType NoteProperty -Name "notifyIcon" -Value (New-Object System.Windows.Forms.NotifyIcon)
+$state | Add-Member -MemberType NoteProperty -Name "workingDir" -Value (Split-Path -Parent -Path $MyInvocation.MyCommand.Definition)
+$state | Add-Member -MemberType NoteProperty -Name "ini" -Value "$env:USERPROFILE\KICKstand.ini"
+$state | Add-Member -MemberType NoteProperty -Name "config" -Value (New-Object -TypeName System.Management.Automation.PSObject)
 
-#...
-contextMenuBuild
-contextMenuActions
+# Application configuration
+$state.config | Add-Member -MemberType NoteProperty -Name "browser" -Value "Brave"
+$state.config | Add-Member -MemberType NoteProperty -Name "ip" -Value "127.0.0.1"
+$state.config | Add-Member -MemberType NoteProperty -Name "port" -Value 9222
+
+# Create a system tray icon and associate the context menu with it
+$state.notifyIcon.Icon = New-Object System.Drawing.Icon -ArgumentList (Join-Path -Path $state.workingDir -ChildPath "kick.ico")
+$state.notifyIcon.ContextMenuStrip = $state.ContextMenu
+$state.notifyIcon.Visible = $true
+$state.notifyIcon.Text = "KICKstand v.0.1"
+
+# Handle the temp directory
+if (-not (Test-Path $state.tempFolder)) {
+    New-Item -ItemType Directory -Path $state.tempFolder
+}
+if (-not (Test-Path $state.pidFile)) {
+    New-Item -ItemType File -Path $state.pidFile
+}
+Set-Content -Path $state.pidFile -Value $PID
+
+# Set up the Context Menu
+contextMenu
 
 # State
 # Set Checked property for Command 1 and TTS Option 1
 $commands.Checked = $true
 $tts.Checked = $true
 
-# Create a system tray icon and associate the context menu with it
-$notifyIcon = New-Object System.Windows.Forms.NotifyIcon
-$scriptPath = Split-Path -Parent -Path $MyInvocation.MyCommand.Definition
-$iconPath = Join-Path -Path $scriptPath -ChildPath "kick.ico"
-$notifyIcon.Icon = New-Object System.Drawing.Icon -ArgumentList $iconPath
-$notifyIcon.ContextMenuStrip = $contextMenu
-$notifyIcon.Visible = $true
-$notifyIcon.Text = "KICKstand v.0.1"
+
+# to be removed later into it's own function
+if (-not (Test-Port -hostname $state.config.ip -port $state.config.port)) {
+    Write-Host "Nothing running on specified IP and Port..."
+    #exit
+}
+
 
 # Create a custom ApplicationContext to keep the script running
-$context = New-Object System.Windows.Forms.ApplicationContext
-[System.Windows.Forms.Application]::Run($context)
+[System.Windows.Forms.Application]::Run($state.Context)
