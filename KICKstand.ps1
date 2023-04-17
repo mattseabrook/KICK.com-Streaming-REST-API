@@ -18,6 +18,18 @@
 # LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+$ini = @"
+; KICKstand configuration file
+
+[config]
+
+
+
+[browser]
+ip=127.0.0.1
+port=9222
+"@
+
 
 <#
     .SYNOPSIS
@@ -131,9 +143,16 @@ if (-not (Test-Port -hostname $ip -port $port)) {
 }
 
 
+<#
+    .SYNOPSIS
+        Connects to a Chrome instance via the Remote Debugging Protocol and listens for WebSocket messages.
 
-$remoteDebuggingUrl = "http://${ip}:${port}"    # To be removed later
-function ListenForWebSockets ($remoteDebuggingUrl) {
+    .DESCRIPTION
+        LOREM IPSUM
+#>
+function ListenForWebSockets {
+    $remoteDebuggingUrl = "http://${ip}:${port}"    # To be removed later
+
     # Import necessary namespaces
     Add-Type -AssemblyName System.Web.Extensions
 
@@ -175,76 +194,113 @@ function ListenForWebSockets ($remoteDebuggingUrl) {
 }
 
 
+<#
+    .SYNOPSIS
+        Builds the Context Menu
+
+    .DESCRIPTION
+        This function builds and populates the Context Menu for the KICKstand icon in the system tray.
+#>
+function contextMenuBuild {
+    $commands = $contextMenu.Items.Add("Commands")
+    $tts = $contextMenu.Items.Add("TTS")
+
+    $separator = New-Object System.Windows.Forms.ToolStripSeparator
+    [void]$contextMenu.Items.Add($separator)
+
+    $help = $contextMenu.Items.Add("Help")
+    $about = $contextMenu.Items.Add("About")
+
+    $separator2 = New-Object System.Windows.Forms.ToolStripSeparator
+    [void]$contextMenu.Items.Add($separator2)
+
+    $exitItem = $contextMenu.Items.Add("Exit")
+}
+
+
+<#
+    .SYNOPSIS
+        Sets up the Context Menu item actions.
+
+    .DESCRIPTION
+        This function defines what happens the user clicks on a Context Menu item.
+#>
+function contextMenuActions {
+    # Channel Commands
+    $commands.Add_Click({
+        if ($commands.Checked) {
+            $commands.Checked = $false
+        } else {
+            $commands.Checked = $true
+        }
+    })
+
+    # Text-to-Speech
+    $tts.Add_Click({
+        if ($tts.Checked) {
+            $tts.Checked = $false
+        } else {
+            $tts.Checked = $true
+        }
+    })
+
+    # Help
+    $help.Add_Click({
+        $url = "https://github.com/mattseabrook/KICKstand#usage"
+        Start-Process $url
+    })
+
+    # About
+    $about.Add_Click({
+        about
+    })
+
+    # Exit
+    $exitItem.Add_Click({
+        $notifyIcon.Visible = $false
+        $contextMenu.Dispose()
+        [System.Windows.Forms.Application]::Exit()
+        exit
+    })
+}
+
+
 # Later to be embedded into a function
+# Speak-Text -Text "Hello, I am a text-to-speech system in PowerShell"
 function Speak-Text {
     param($Text)
     Add-Type -AssemblyName System.Speech
     $speechSynthesizer = New-Object System.Speech.Synthesis.SpeechSynthesizer
     $speechSynthesizer.Speak($Text)
 }
-# Speak-Text -Text "Hello, I am a text-to-speech system in PowerShell"
 
 
-
+#
+# INIT
+#
 Add-Type -AssemblyName System.Windows.Forms
 
-# Create a context menu with two sections and an Exit item
-$contextMenu = New-Object System.Windows.Forms.ContextMenuStrip
-$commands = $contextMenu.Items.Add("Commands")
-$tts = $contextMenu.Items.Add("TTS")
+$state = New-Object -TypeName System.Management.Automation.PSObject
+$state | Add-Member -MemberType NoteProperty -Name "Browser" -Value "Brave"
+$state | Add-Member -MemberType NoteProperty -Name "IPAddress" -Value "127.0.0.1"
+$state | Add-Member -MemberType NoteProperty -Name "Port" -Value 9222
+$state | Add-Member -MemberType NoteProperty -Name "ContextMenu" -Value (New-Object System.Windows.Forms.ContextMenuStrip)
+$state | Add-Member -MemberType NoteProperty -Name "TempFolder" -Value "$env:USERPROFILE\temp\KICKstand"
+$state | Add-Member -MemberType NoteProperty -Name "PIDFile" -Value "$state.TempFolder\PID"
 
-$separator = New-Object System.Windows.Forms.ToolStripSeparator
-[void]$contextMenu.Items.Add($separator)
+if (-not (Test-Path $state.TempFolder)) {
+    New-Item -ItemType Directory -Path $state.TempFolder
+}
+if (-not (Test-Path $state.PIDFile)) {
+    New-Item -ItemType File -Path $state.PIDFile
+}
+Set-Content -Path $state.PIDFile -Value $PID
 
-$help = $contextMenu.Items.Add("Help")
-$about = $contextMenu.Items.Add("About")
+#...
+contextMenuBuild
+contextMenuActions
 
-$separator2 = New-Object System.Windows.Forms.ToolStripSeparator
-[void]$contextMenu.Items.Add($separator2)
-
-$exitItem = $contextMenu.Items.Add("Exit")
-
-#
-# Define actions for each Context Menu item
-#
-
-# Channel Commands
-$commands.Add_Click({
-    if ($commands.Checked) {
-        $commands.Checked = $false
-    } else {
-        $commands.Checked = $true
-    }
-})
-
-# Text-to-Speech
-$tts.Add_Click({
-    if ($tts.Checked) {
-        $tts.Checked = $false
-    } else {
-        $tts.Checked = $true
-    }
-})
-
-# Help
-$help.Add_Click({
-    $url = "https://github.com/mattseabrook/KICKstand#usage"
-    Start-Process $url
-})
-
-# About
-$about.Add_Click({
-    about
-})
-
-# Exit
-$exitItem.Add_Click({
-    $notifyIcon.Visible = $false
-    $contextMenu.Dispose()
-    [System.Windows.Forms.Application]::Exit()
-    exit
-})
-
+# State
 # Set Checked property for Command 1 and TTS Option 1
 $commands.Checked = $true
 $tts.Checked = $true
