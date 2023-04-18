@@ -228,11 +228,13 @@ function contextMenu {
     $help.Add_Click({
         $url = "https://github.com/mattseabrook/KICKstand#usage"
         Start-Process $url
+        [GC]::Collect()
     })
 
     # About
     $about.Add_Click({
         about
+        [GC]::Collect()
     })
 
     # Exit
@@ -266,7 +268,7 @@ $state = New-Object -TypeName System.Management.Automation.PSObject
 $state | Add-Member -MemberType NoteProperty -Name "context" -Value (New-Object System.Windows.Forms.ApplicationContext)
 $state | Add-Member -MemberType NoteProperty -Name "contextMenu" -Value (New-Object System.Windows.Forms.ContextMenuStrip)
 $state | Add-Member -MemberType NoteProperty -Name "tempFolder" -Value "$env:USERPROFILE\temp\KICKstand"
-$state | Add-Member -MemberType NoteProperty -Name "pidFile" -Value "$state:tempFolder\PID"
+$state | Add-Member -MemberType NoteProperty -Name "pidFile" -Value ($state.tempFolder + "\PID")
 $state | Add-Member -MemberType NoteProperty -Name "notifyIcon" -Value (New-Object System.Windows.Forms.NotifyIcon)
 $state | Add-Member -MemberType NoteProperty -Name "workingDir" -Value (Split-Path -Parent -Path $MyInvocation.MyCommand.Definition)
 $state | Add-Member -MemberType NoteProperty -Name "ini" -Value "$env:USERPROFILE\KICKstand.ini"
@@ -307,6 +309,8 @@ if (-not (Test-Port -hostname $state.config.ip -port $state.config.port)) {
     #exit
 }
 
+# Clean up 
+[GC]::Collect()
 
 # Create a custom ApplicationContext to keep the script running
 [System.Windows.Forms.Application]::Run($state.Context)
