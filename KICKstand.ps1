@@ -275,7 +275,6 @@ $state | Add-Member -MemberType NoteProperty -Name "ini" -Value "$env:USERPROFIL
 $state | Add-Member -MemberType NoteProperty -Name "config" -Value (New-Object -TypeName System.Management.Automation.PSObject)
 
 # Application configuration
-$state.config | Add-Member -MemberType NoteProperty -Name "browser" -Value "Brave"
 $state.config | Add-Member -MemberType NoteProperty -Name "ip" -Value "127.0.0.1"
 $state.config | Add-Member -MemberType NoteProperty -Name "port" -Value 9222
 
